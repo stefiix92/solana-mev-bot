@@ -152,6 +152,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f202df86484c868dbad7eaa557ef785d5c66295e41b460ef922eca0723b842c"
 
 [[package]]
+name = "arc-swap"
+version = "1.9.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6a3a1fd6f75306b68087b831f025c712524bcb19aad54e557b1129cfa0a2b207"
+dependencies = [
+ "rustversion",
+]
+
+[[package]]
 name = "ark-bn254"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2793,15 +2802,19 @@ name = "mev-bot"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "arc-swap",
  "mev-account-cache",
  "mev-common",
  "mev-data-feed",
  "mev-dex-adapters",
  "mev-executor",
+ "mev-lending-adapters",
  "mev-metrics",
  "mev-price-graph",
  "mev-risk",
  "mev-strategies",
+ "serde_json",
+ "solana-sdk",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -2851,8 +2864,12 @@ name = "mev-executor"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "base64 0.22.1",
+ "bincode",
+ "bs58 0.5.1",
  "jito-sdk-rust",
  "mev-common",
+ "rand 0.8.5",
  "reqwest 0.12.28",
  "serde_json",
  "solana-client",
@@ -2901,6 +2918,7 @@ dependencies = [
  "dashmap 6.1.0",
  "mev-common",
  "reqwest 0.12.28",
+ "serde",
  "serde_json",
  "solana-sdk",
  "tokio",
@@ -2912,9 +2930,11 @@ name = "mev-strategies"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "arc-swap",
  "mev-account-cache",
  "mev-common",
  "mev-dex-adapters",
+ "mev-lending-adapters",
  "mev-price-graph",
  "solana-sdk",
  "tokio",

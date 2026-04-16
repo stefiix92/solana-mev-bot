@@ -1,0 +1,33 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:www.helius.dev)",
+      "Bash(rustc --version)",
+      "Bash(cargo --version)",
+      "Bash(cargo search *)",
+      "Bash(cargo check *)",
+      "Bash(rustup update *)",
+      "Bash(rustup show *)",
+      "Bash(grep -r \"pub struct SubscribeUpdateAccount\" ~/.cargo/registry/src/index.crates.io-*/helius-laserstream-0.1.9/)",
+      "Bash(grep -r \"SubscribeUpdateAccount\" ~/.cargo/registry/src/index.crates.io-*/laserstream-core-proto-*/)",
+      "Bash(grep -A 10 \"message SubscribeUpdateAccount \" ~/.cargo/registry/src/index.crates.io-*/laserstream-core-proto-9.0.2/proto/geyser.proto)",
+      "Bash(grep -A 15 \"message SubscribeUpdateAccountInfo \" ~/.cargo/registry/src/index.crates.io-*/laserstream-core-proto-9.0.2/proto/geyser.proto)",
+      "Bash(ls -d ~/.cargo/registry/src/*/raydium*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.rs)",
+      "WebFetch(domain:gist.githubusercontent.com)",
+      "Bash(cargo test *)",
+      "Bash(ls ~/.cargo/registry/src/index.crates.io-*/orca_whirlpools_client-*/src/)",
+      "Bash(ls ~/.cargo/registry/src/index.crates.io-*/jito-sdk-rust-0.3.*/src/)",
+      "Bash(head -50 ~/.cargo/registry/src/index.crates.io-*/jito-sdk-rust-0.3.*/src/lib.rs)",
+      "Bash(grep *)",
+      "Bash(cargo build *)",
+      "Bash(find . -name \"*.rs\" -not -path \"./target/*\" -exec wc -l {} +)",
+      "WebFetch(domain:docs.meteora.ag)",
+      "WebFetch(domain:allenhark.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.lyslabs.ai)"
+    ]
+  }
+}

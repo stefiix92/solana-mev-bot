@@ -13,12 +13,16 @@ mev-common = { workspace = true }
 mev-data-feed = { workspace = true }
 mev-account-cache = { workspace = true }
 mev-dex-adapters = { workspace = true }
+mev-lending-adapters = { workspace = true }
 mev-price-graph = { workspace = true }
 mev-strategies = { workspace = true }
 mev-executor = { workspace = true }
 mev-risk = { workspace = true }
 mev-metrics = { workspace = true }
+solana-sdk = { workspace = true }
 tokio = { workspace = true }
 tracing = { workspace = true }
 tracing-subscriber = { workspace = true }
 anyhow = { workspace = true }
+serde_json = { workspace = true }
+arc-swap = { workspace = true }

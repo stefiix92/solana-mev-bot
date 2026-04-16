@@ -10,7 +10,7 @@ use_helius_proxy = true
 keypair_path = "./bot-keypair.json"
 
 [strategies]
-enabled = ["dex_arb"]
+enabled = ["dex_arb", "backrun", "liquidation"]
 
 [strategies.dex_arb]
 min_profit_lamports = 50_000

@@ -37,7 +37,7 @@ anchor-lang = "0.30"
 borsh = "1"
 
 # DEX decoders
-orca_whirlpools_client = "2"
+orca_whirlpools_core = "2"
 
 # Async runtime
 tokio = { version = "1", features = ["full"] }
