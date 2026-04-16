@@ -1,0 +1,15 @@
+[package]
+name = "mev-strategies"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+mev-common = { workspace = true }
+mev-dex-adapters = { workspace = true }
+mev-price-graph = { workspace = true }
+mev-account-cache = { workspace = true }
+solana-sdk = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+anyhow = { workspace = true }

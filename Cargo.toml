@@ -1,0 +1,85 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/common",
+    "crates/data-feed",
+    "crates/account-cache",
+    "crates/dex-adapters",
+    "crates/lending-adapters",
+    "crates/price-graph",
+    "crates/strategies",
+    "crates/executor",
+    "crates/risk",
+    "crates/metrics",
+    "crates/mev-bot",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.89"
+
+[workspace.dependencies]
+# Solana
+solana-sdk = "2.2"
+solana-client = "2.2"
+solana-account-decoder = "2.2"
+solana-transaction-status = "2.2"
+
+# Jito
+jito-sdk-rust = "0.3"
+
+# Helius
+helius-laserstream = "0.1"
+
+# Anchor / Borsh
+anchor-lang = "0.30"
+borsh = "1"
+
+# DEX decoders
+orca_whirlpools_client = "2"
+
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# Concurrency
+dashmap = "6"
+arc-swap = "1"
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+
+# Config
+config = "0.14"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Metrics
+prometheus = "0.13"
+
+# HTTP
+reqwest = { version = "0.12", features = ["json"] }
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Encoding
+bs58 = "0.5"
+base64 = "0.22"
+
+# Internal crates
+mev-common = { path = "crates/common" }
+mev-data-feed = { path = "crates/data-feed" }
+mev-account-cache = { path = "crates/account-cache" }
+mev-dex-adapters = { path = "crates/dex-adapters" }
+mev-lending-adapters = { path = "crates/lending-adapters" }
+mev-price-graph = { path = "crates/price-graph" }
+mev-strategies = { path = "crates/strategies" }
+mev-executor = { path = "crates/executor" }
+mev-risk = { path = "crates/risk" }
+mev-metrics = { path = "crates/metrics" }

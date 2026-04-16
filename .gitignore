@@ -1,0 +1,6 @@
+/target
+.env
+*.pem
+*.keypair.json
+node_modules/
+monitoring/dist/

@@ -1,0 +1,24 @@
+[package]
+name = "mev-bot"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[[bin]]
+name = "mev-bot"
+path = "src/main.rs"
+
+[dependencies]
+mev-common = { workspace = true }
+mev-data-feed = { workspace = true }
+mev-account-cache = { workspace = true }
+mev-dex-adapters = { workspace = true }
+mev-price-graph = { workspace = true }
+mev-strategies = { workspace = true }
+mev-executor = { workspace = true }
+mev-risk = { workspace = true }
+mev-metrics = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+anyhow = { workspace = true }

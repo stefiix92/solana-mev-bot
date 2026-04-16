@@ -1,0 +1,11 @@
+[helius]
+rpc_endpoint = "https://devnet.helius-rpc.com"
+laserstream_endpoint = "https://laserstream-devnet.helius-rpc.com"
+
+[risk]
+max_position_lamports = 1_000_000_000
+daily_loss_limit_lamports = 500_000_000
+
+[runtime]
+dry_run = true
+log_level = "debug"

@@ -1,0 +1,12 @@
+[package]
+name = "mev-lending-adapters"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+mev-common = { workspace = true }
+solana-sdk = { workspace = true }
+borsh = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }

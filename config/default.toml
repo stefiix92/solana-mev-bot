@@ -1,0 +1,50 @@
+[helius]
+rpc_endpoint = "https://mainnet.helius-rpc.com"
+laserstream_endpoint = "https://laserstream-mainnet.helius-rpc.com"
+
+[jito]
+block_engine_url = "https://mainnet.block-engine.jito.wtf"
+use_helius_proxy = true
+
+[wallet]
+keypair_path = "./bot-keypair.json"
+
+[strategies]
+enabled = ["dex_arb"]
+
+[strategies.dex_arb]
+min_profit_lamports = 50_000
+max_hops = 3
+anchor_mints = [
+    "So11111111111111111111111111111111111111112",
+    "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+    "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+]
+
+[strategies.backrun]
+min_trade_size_lamports = 100_000_000_000
+max_slippage_bps = 50
+
+[strategies.liquidation]
+min_bonus_bps = 200
+protocols = ["kamino", "marginfi", "save"]
+
+[risk]
+max_position_lamports = 10_000_000_000
+max_tip_lamports = 5_000_000
+tip_fraction = 0.50
+daily_loss_limit_lamports = 1_000_000_000
+circuit_breaker_window_secs = 300
+circuit_breaker_max_loss_lamports = 500_000_000
+
+[risk.blacklist]
+token_mints = []
+pool_addresses = []
+
+[metrics]
+prometheus_port = 9090
+
+[runtime]
+worker_threads = 4
+dry_run = false
+log_level = "info"
