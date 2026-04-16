@@ -2933,6 +2933,7 @@ dependencies = [
  "arc-swap",
  "mev-account-cache",
  "mev-common",
+ "mev-data-feed",
  "mev-dex-adapters",
  "mev-lending-adapters",
  "mev-price-graph",

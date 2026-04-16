@@ -17,7 +17,8 @@ use mev_data_feed::filters::{build_dex_subscription, build_lending_subscription}
 use mev_data_feed::laserstream::{DataFeed, DataFeedConfig};
 use mev_executor::bundle::JitoBundle;
 use mev_executor::helius_sender::HeliusSender;
-use mev_executor::jito_client::Executor;
+use mev_executor::jito_client::{Executor, JitoBundleClient};
+use mev_executor::status_tracker::{BundleOutcome, BundleStatusTracker};
 use mev_executor::tx_builder;
 use mev_metrics::prometheus_exporter::{serve_metrics, BotMetrics};
 use mev_metrics::pnl::PnlTracker;
@@ -259,19 +260,25 @@ async fn main() -> Result<()> {
         });
     }
 
-    // 6. Executor task — receives opportunities, builds bundles, submits to Jito
+    // 6. Executor task — receives opportunities, builds bundles, submits to Jito, tracks status
     {
         let pnl = pnl.clone();
+        let circuit_breaker = circuit_breaker.clone();
         let metrics = metrics.clone();
         let risk = risk_limits.clone();
         let mut shutdown = shutdown_rx.clone();
         let helius = HeliusSender::new(&rpc_url);
+        let jito_status_client = JitoBundleClient::new(&jito_url);
+        let mut status_tracker = BundleStatusTracker::new(64, 30);
 
         tokio::spawn(async move {
             info!("Executor started");
+            let mut poll_interval = tokio::time::interval(std::time::Duration::from_secs(5));
+
             loop {
                 tokio::select! {
                     Some(opp) = opp_rx.recv() => {
+                        let strategy_label = opp.strategy.clone();
                         info!(
                             strategy = %opp.strategy,
                             profit = opp.expected_profit_lamports,
@@ -281,7 +288,6 @@ async fn main() -> Result<()> {
 
                         let tip = risk.calculate_tip(opp.expected_profit_lamports);
 
-                        // Get recent blockhash
                         let blockhash = match helius.get_latest_blockhash() {
                             Ok(h) => h,
                             Err(e) => {
@@ -290,7 +296,6 @@ async fn main() -> Result<()> {
                             }
                         };
 
-                        // Build transaction
                         let tx = match tx_builder::build_arb_transaction(
                             &opp, &keypair, tip, 0, blockhash,
                         ) {
@@ -301,29 +306,54 @@ async fn main() -> Result<()> {
                             }
                         };
 
-                        // Build and submit Jito bundle
                         let mut bundle = JitoBundle::new(opp.strategy.clone());
                         bundle.add_transaction(tx);
                         bundle.expected_profit_lamports = opp.expected_profit_lamports;
                         bundle.tip_lamports = tip;
 
                         pnl.record_bundle_submitted();
-                        metrics.bundles_submitted.with_label_values(&["dex_arb"]).inc();
+                        metrics.bundles_submitted.with_label_values(&[&strategy_label]).inc();
 
                         match executor.execute(bundle).await {
                             Ok(Some(bundle_id)) => {
-                                info!(bundle_id = %bundle_id, "Bundle submitted to Jito");
-                                // TODO: track bundle status asynchronously
+                                info!(bundle_id = %bundle_id, "Bundle submitted");
+                                status_tracker.track(
+                                    bundle_id,
+                                    strategy_label,
+                                    opp.expected_profit_lamports,
+                                    tip,
+                                );
                             }
-                            Ok(None) => {
-                                // Dry run — already logged by executor
-                            }
+                            Ok(None) => {} // Dry run
                             Err(e) => {
                                 warn!(error = %e, "Bundle submission failed");
-                                metrics.bundles_failed.with_label_values(&["dex_arb"]).inc();
+                                metrics.bundles_failed.with_label_values(&[&strategy_label]).inc();
                             }
                         }
                     }
+
+                    // Poll bundle statuses every 5 seconds
+                    _ = poll_interval.tick() => {
+                        if status_tracker.pending_count() > 0 {
+                            let outcomes = status_tracker.poll(&jito_status_client).await;
+                            for outcome in outcomes {
+                                match outcome {
+                                    BundleOutcome::Landed { strategy, profit_lamports, tip_lamports, .. } => {
+                                        pnl.record_bundle_landed(profit_lamports, tip_lamports);
+                                        metrics.bundles_landed.with_label_values(&[&strategy]).inc();
+                                        circuit_breaker.record_trade(profit_lamports);
+                                    }
+                                    BundleOutcome::Failed { strategy, reason, .. } => {
+                                        metrics.bundles_failed.with_label_values(&[&strategy]).inc();
+                                        // Record as zero P&L (revert protection = no loss)
+                                        circuit_breaker.record_trade(0);
+                                    }
+                                    BundleOutcome::Pending => {}
+                                }
+                            }
+                        }
+                    }
+
                     _ = shutdown.changed() => break,
                 }
             }

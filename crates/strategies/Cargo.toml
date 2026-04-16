@@ -6,6 +6,7 @@ rust-version.workspace = true
 
 [dependencies]
 mev-common = { workspace = true }
+mev-data-feed = { workspace = true }
 mev-dex-adapters = { workspace = true }
 mev-lending-adapters = { workspace = true }
 mev-price-graph = { workspace = true }

@@ -27,7 +27,8 @@
       "WebFetch(domain:docs.meteora.ag)",
       "WebFetch(domain:allenhark.com)",
       "WebFetch(domain:github.com)",
-      "WebFetch(domain:docs.lyslabs.ai)"
+      "WebFetch(domain:docs.lyslabs.ai)",
+      "WebFetch(domain:docs.shyft.to)"
     ]
   }
 }
